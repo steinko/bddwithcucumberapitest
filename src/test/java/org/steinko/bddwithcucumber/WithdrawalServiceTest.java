@@ -1,4 +1,4 @@
-package bddwithcucumberapitest;
+package org.steinko.bddwithcucumber;
 
 import static io.restassured.RestAssured.given;
 import org.junit.jupiter.api.Test;

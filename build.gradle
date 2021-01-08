@@ -1,7 +1,5 @@
 plugins {
-
     id 'java'
-    id "jacoco"
 }
 
 repositories {
@@ -11,13 +9,6 @@ repositories {
 test {
     useJUnitPlatform()
 }
-
-	
-jacocoTestReport {
-		reports {
-			xml.enabled true
-		}
-	}
 
 
 dependencies {
@@ -30,5 +21,24 @@ dependencies {
    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.0")
    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.0")
    testImplementation 'org.hamcrest:hamcrest:2.2'
+   testImplementation 'io.cucumber:cucumber-java:6.9.1'
+   testImplementation 'io.cucumber:cucumber-junit:6.9.1'
    
+}
+
+configurations {
+    cucumberRuntime {
+        extendsFrom testImplementation
+    }
+}
+
+task cucumber() {
+    dependsOn assemble, testClasses
+    doLast {
+        javaexec {
+            main = "io.cucumber.core.cli.Main"
+            classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+            args = ['--plugin', 'pretty', '--glue', 'gradle.cucumber', 'src/test/resources']
+        }
+    }
 }
